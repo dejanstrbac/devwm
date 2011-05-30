@@ -223,7 +223,6 @@ void destroynotify(XEvent *e) {
 }
 
 void die(const char* e) {
-    fprintf(stdout,"catwm: %s\n",e);
     exit(1);
 }
 
@@ -288,18 +287,18 @@ void buttonpress(XEvent *e) {
 
 
 void kill_client() {
-	if(current != NULL) {
-		//send delete signal to window
-		XEvent ke;
-		ke.type = ClientMessage;
-		ke.xclient.window = current->win;
-		ke.xclient.message_type = XInternAtom(dis, "WM_PROTOCOLS", True);
-		ke.xclient.format = 32;
-		ke.xclient.data.l[0] = XInternAtom(dis, "WM_DELETE_WINDOW", True);
-		ke.xclient.data.l[1] = CurrentTime;
-		XSendEvent(dis, current->win, False, NoEventMask, &ke);
-		send_kill_signal(current->win);
-	}
+    if(current != NULL) {
+        //send delete signal to window
+        XEvent ke;
+        ke.type = ClientMessage;
+        ke.xclient.window = current->win;
+        ke.xclient.message_type = XInternAtom(dis, "WM_PROTOCOLS", True);
+        ke.xclient.format = 32;
+        ke.xclient.data.l[0] = XInternAtom(dis, "WM_DELETE_WINDOW", True);
+        ke.xclient.data.l[1] = CurrentTime;
+        XSendEvent(dis, current->win, False, NoEventMask, &ke);
+        send_kill_signal(current->win);
+    }
 }
 
 void maprequest(XEvent *e) {
@@ -405,7 +404,6 @@ void quit() {
     if(bool_quit == 1) {
         XUngrabKey(dis, AnyKey, AnyModifier, root);
         XDestroySubwindows(dis, root);
-        fprintf(stdout, "catwm: Thanks for using!\n");
         XCloseDisplay(dis);
         die("forced shutdown");
     }
@@ -424,7 +422,6 @@ void quit() {
     }
 
     XUngrabKey(dis,AnyKey,AnyModifier,root);
-    fprintf(stdout,"catwm: Thanks for using!\n");
 }
 
 void remove_window(Window w) {
@@ -540,9 +537,9 @@ void setup() {
 
 void sigchld(int unused) {
     // Again, thx to dwm ;)
-	if(signal(SIGCHLD, sigchld) == SIG_ERR)
-		die("Can't install SIGCHLD handler");
-	while(0 < waitpid(-1, NULL, WNOHANG));
+    if(signal(SIGCHLD, sigchld) == SIG_ERR)
+        die("Can't install SIGCHLD handler");
+    while(0 < waitpid(-1, NULL, WNOHANG));
 }
 
 void spawn(const Arg arg) {
@@ -620,7 +617,7 @@ void tile() {
                 // Stack
                 for(c=head->next;c;c=c->next) ++n;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size-(2*BORDER_WIDTH), x, sw-master_size-(2*BORDER_WIDTH), (sh/n)-(2*BORDER_WIDTH));
+                    XMoveResizeWindow(dis,c->win,master_size, x, sw-master_size-(2*BORDER_WIDTH), (sh/n)-(2*BORDER_WIDTH));
                     x += sh/n;
                 }
                 break;

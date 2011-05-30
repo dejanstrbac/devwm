@@ -1,7 +1,7 @@
 CFLAGS+= -Wall
 LDADD+= -lX11 
 LDFLAGS=
-EXEC=catwm
+EXEC=devwm
 
 PREFIX?= /usr
 BINDIR?= $(PREFIX)/bin
@@ -10,11 +10,11 @@ CC=gcc
 
 all: $(EXEC)
 
-catwm: catwm.o
+devwm: devwm.o
 	$(CC) $(LDFLAGS) -Os -o $@ $+ $(LDADD)
 
 install: all
-	install -Dm 755 catwm $(DESTDIR)$(BINDIR)/catwm
+	install -Dm 755 devwm $(DESTDIR)$(BINDIR)/devwm
 
 clean:
-	rm -f catwm *.o
+	rm -f devwm *.o
