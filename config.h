@@ -6,7 +6,8 @@
 #define MOD4             Mod4Mask
 #define MASTER_SIZE     0.6
 
-// Colors
+// Borders
+#define BORDER_WIDTH    2
 #define FOCUS           "rgb:ff/49/00"
 #define UNFOCUS         "rgb:88/88/88"
 
@@ -25,6 +26,8 @@ static struct key keys[] = {
     {  MOD4,             XK_bracketleft,             next_win,       {NULL}},
     {  MOD4,             XK_Tab,                     next_win,       {NULL}},
     {  MOD4,             XK_bracketright,            prev_win,       {NULL}},
+    {  MOD4,             XK_j,                       prev_win,       {NULL}},
+    {  MOD4,             XK_k,                       next_win,       {NULL}},
     {  MOD4|ShiftMask,   XK_j,                       move_up,        {NULL}},
     {  MOD4|ShiftMask,   XK_k,                       move_down,      {NULL}},
     {  MOD4,             XK_Return,                  swap_master,    {NULL}},

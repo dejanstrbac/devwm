@@ -369,7 +369,7 @@ void next_win() {
 
 void prev_desktop() {
     int tmp = current_desktop;
-    if(tmp-- <= 0) tmp = TABLENGTH(desktops);
+    if(--tmp <= 0) tmp = TABLENGTH(desktops);
     Arg a = {.i = tmp};
     change_desktop(a);
 }
@@ -582,7 +582,7 @@ void swap_master() {
 }
 
 void switch_mode() {
-    mode = (mode == 0) ? 1:0;
+    if (mode++ >= 2) mode=0;
     tile();
     update_current();
 }
@@ -590,28 +590,38 @@ void switch_mode() {
 void tile() {
     client *c;
     int n = 0;
-    int y = 0;
+    int x = 0;
 
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,0,0,sw-2,sh-2);
+        XMoveResizeWindow(dis,head->win,0,0,sw-(2*BORDER_WIDTH),sh-(2*BORDER_WIDTH));
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,0,0,master_size-2,sh-2);
+                XMoveResizeWindow(dis,head->win,0,0,sw-(2*BORDER_WIDTH),master_size-(2*BORDER_WIDTH));
 
                 // Stack
                 for(c=head->next;c;c=c->next) ++n;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2,(sh/n)-2);
-                    y += sh/n;
+                    XMoveResizeWindow(dis,c->win,x,master_size, (sw/n)-(2*BORDER_WIDTH), sh-master_size-(2*BORDER_WIDTH));
+                    x += sw/n;
                 }
                 break;
             case 1:
                 for(c=head;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,0,0,sw,sh);
+                    XMoveResizeWindow(dis,c->win,0,0,sw-(2*BORDER_WIDTH),sh-(2*BORDER_WIDTH));
+                }
+                break;
+            case 2:
+                XMoveResizeWindow(dis,head->win,0,0,master_size-(2*BORDER_WIDTH), sh-(2*BORDER_WIDTH));
+
+                // Stack
+                for(c=head->next;c;c=c->next) ++n;
+                for(c=head->next;c;c=c->next) {
+                    XMoveResizeWindow(dis,c->win,master_size-(2*BORDER_WIDTH), x, sw-master_size-(2*BORDER_WIDTH), (sh/n)-(2*BORDER_WIDTH));
+                    x += sh/n;
                 }
                 break;
             default:
@@ -626,7 +636,7 @@ void update_current() {
     for(c=head;c;c=c->next)
         if(current == c) {
             // "Enable" current window
-            XSetWindowBorderWidth(dis,c->win,1);
+            XSetWindowBorderWidth(dis,c->win,BORDER_WIDTH);
             XSetWindowBorder(dis,c->win,win_focus);
             XSetInputFocus(dis,c->win,RevertToParent,CurrentTime);
             XRaiseWindow(dis,c->win);
