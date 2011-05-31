@@ -1,7 +1,7 @@
 devWM
 =====
 
-devWM is a very simple and lightweight tiling window manager based on catwm.
+devWM is a very simple and lightweight tiling window manager based on [catwm](https://github.com/pyknite/catwm).
 
 Modes
 -----
@@ -20,7 +20,7 @@ Usage
 Default bindings:
 
     Win + d               spawn a new window with urxvtc terminal
-    Win + w               kill a window
+    Win + w               kill
     Ctrl + Alt + Q        quit
     Win + [               next window
     Win + ]               previous window
@@ -32,7 +32,7 @@ Default bindings:
     Win + h               decrease master window
     Win + l               increase master window
     Win + Space           switch tiling mode
-    Win + Shift + Enter   zoom current window
+    Win + Shift + Enter   maximize current
 
 Mouse Usage
 -----------
