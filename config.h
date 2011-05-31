@@ -4,7 +4,7 @@
 // Mod (Mod1 == alt) and master size
 #define MOD1             Mod1Mask
 #define MOD4             Mod4Mask
-#define MASTER_SIZE     0.6
+#define MASTER_SIZE     0.5
 
 // Borders
 #define BORDER_WIDTH    2
@@ -35,6 +35,7 @@ static struct key keys[] = {
     {  MOD4|ShiftMask,   XK_j,                       move_up,        {NULL}},
     {  MOD4|ShiftMask,   XK_k,                       move_down,      {NULL}},
     {  MOD4,             XK_Return,                  swap_master,    {NULL}},
+    {  MOD4|ShiftMask,   XK_Return,                  switch_mode,    {.i = VIEW_SINGLE}},
     {  MOD4,             XK_space,                   switch_mode,    {NULL}},
     {  MOD4,             XK_n,                       spawn,          {.com = urxvtcmd}},
     {  MOD4,             XK_Right,                   next_desktop,   {NULL}},

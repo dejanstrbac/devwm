@@ -85,7 +85,7 @@ static Display *dis;
 static int bool_quit;
 static int current_desktop;
 static int master_size;
-static int mode;
+static int mode, last_mode;
 static int sh;
 static int sw;
 static int screen;
@@ -579,8 +579,18 @@ void swap_master() {
     }
 }
 
-void switch_mode() {
-    if (mode++ >= 2) mode=VIEW_VERTICAL_STACK;
+void switch_mode(Arg arg) {
+    if (arg.i) {
+        if (arg.i == mode) {
+            mode = last_mode;
+        } else {
+            last_mode = mode;
+            mode = arg.i;
+        }
+    } else if (++mode > 2) {
+        mode = 0;
+        last_mode = mode;
+    }
     tile();
     update_current();
 }
