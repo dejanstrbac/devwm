@@ -11,6 +11,10 @@
 #define FOCUS           "rgb:ff/49/00"
 #define UNFOCUS         "rgb:88/88/88"
 
+#define VIEW_VERTICAL_STACK     0
+#define VIEW_HORIZONTAL_STACK   1
+#define VIEW_SINGLE             2
+
 const char* urxvtcmd[] = {"urxvt","-fade","30","-bg","black","-fg","white","-fadecolor","white",NULL};
 
 // Avoid multiple paste
@@ -22,7 +26,7 @@ const char* urxvtcmd[] = {"urxvt","-fade","30","-bg","black","-fg","white","-fad
 static struct key keys[] = {
     {  MOD4,             XK_h,                       decrease,       {NULL}},
     {  MOD4,             XK_l,                       increase,       {NULL}},
-    {  MOD4,             XK_x,                       kill_client,    {NULL}},
+    {  MOD4,             XK_w,                       kill_client,    {NULL}},
     {  MOD4,             XK_bracketleft,             next_win,       {NULL}},
     {  MOD4,             XK_Tab,                     next_win,       {NULL}},
     {  MOD4,             XK_bracketright,            prev_win,       {NULL}},

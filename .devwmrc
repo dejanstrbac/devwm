@@ -1,0 +1,7 @@
+#
+# devwm init file
+#
+mode		0
+spawn		urxvt\-tn\linux\-bg\black\-fg\white\-e\ssh\-t\deindeal@deindeal.ch\"./watch.apache"
+spawn		urxvt\-tn\linux\-bg\black\-fg\white\-e\ssh\-t\deindeal@deindeal.ch\"./watch.mysql"
+spawn		urxvt\-tn\linux\-bg\black\-fg\white\-e\ssh\-t\deindeal@deindeal.ch\"./watch.mysql-queries"

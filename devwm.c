@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <signal.h>
 #include <sys/wait.h>
 
@@ -368,7 +369,7 @@ void next_win() {
 
 void prev_desktop() {
     int tmp = current_desktop;
-    if(--tmp <= 0) tmp = TABLENGTH(desktops);
+    if(tmp-- <= 0) tmp = TABLENGTH(desktops);
     Arg a = {.i = tmp};
     change_desktop(a);
 }
@@ -505,7 +506,7 @@ void setup() {
     grabkeys();
 
     // Vertical stack
-    mode = 0;
+    mode = VIEW_VERTICAL_STACK;
 
     // For exiting
     bool_quit = 0;
@@ -579,7 +580,7 @@ void swap_master() {
 }
 
 void switch_mode() {
-    if (mode++ >= 2) mode=0;
+    if (mode++ >= 2) mode=VIEW_VERTICAL_STACK;
     tile();
     update_current();
 }
@@ -595,7 +596,17 @@ void tile() {
     }
     else if(head != NULL) {
         switch(mode) {
-            case 0:
+            case VIEW_VERTICAL_STACK:
+                XMoveResizeWindow(dis,head->win,0,0,master_size-(2*BORDER_WIDTH), sh-(2*BORDER_WIDTH));
+
+                // Stack
+                for(c=head->next;c;c=c->next) ++n;
+                for(c=head->next;c;c=c->next) {
+                    XMoveResizeWindow(dis,c->win,master_size, x, sw-master_size-(2*BORDER_WIDTH), (sh/n)-(2*BORDER_WIDTH));
+                    x += sh/n;
+                }
+                break;
+            case VIEW_HORIZONTAL_STACK:
                 // Master window
                 XMoveResizeWindow(dis,head->win,0,0,sw-(2*BORDER_WIDTH),master_size-(2*BORDER_WIDTH));
 
@@ -606,22 +617,12 @@ void tile() {
                     x += sw/n;
                 }
                 break;
-            case 1:
+           case VIEW_SINGLE:
                 for(c=head;c;c=c->next) {
                     XMoveResizeWindow(dis,c->win,0,0,sw-(2*BORDER_WIDTH),sh-(2*BORDER_WIDTH));
                 }
                 break;
-            case 2:
-                XMoveResizeWindow(dis,head->win,0,0,master_size-(2*BORDER_WIDTH), sh-(2*BORDER_WIDTH));
-
-                // Stack
-                for(c=head->next;c;c=c->next) ++n;
-                for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size, x, sw-master_size-(2*BORDER_WIDTH), (sh/n)-(2*BORDER_WIDTH));
-                    x += sh/n;
-                }
-                break;
-            default:
+             default:
                 break;
         }
     }
@@ -642,6 +643,40 @@ void update_current() {
             XSetWindowBorder(dis,c->win,win_unfocus);
 }
 
+void load_profile() {
+    FILE *file = fopen(".devwmrc", "r");
+    int param, linenum=0;
+    char *token, line[256], **params;
+    Arg arg;
+
+   if (file != NULL) {
+       while(fgets(line, 256, file) != NULL) {
+        char key[256], value[256];
+        linenum++;
+        if (line[0] == '#') continue;
+        if (sscanf(line, "%s\t\t%s", key, value) !=2) {
+          fprintf(stderr, "syntax error, line %d\n", linenum);
+        } else {
+         // change the stacking mode
+         if (strcmp(key, "mode")==0)
+             mode = atoi(value);
+         // spawn window commands
+         if (strcmp(key,"spawn")==0) {
+           param = 0;
+           params = (char**)calloc(sizeof(char**),50);
+           token = strtok(value, "\\");
+           do params[param++] = token; while ((token = strtok(NULL,"\\")));
+           params[param] = NULL;
+           arg.com = (const char **)params;
+           spawn(arg);
+           free(params);
+          }
+        }
+    }
+   fclose(file);
+   }
+}
+
 int main(int argc, char **argv) {
     // Open display
     if(!(dis = XOpenDisplay(NULL)))
@@ -649,6 +684,9 @@ int main(int argc, char **argv) {
 
     // Setup env
     setup();
+
+    // If there is a config file, process it
+    load_profile();
 
     // Start wm
     start();
