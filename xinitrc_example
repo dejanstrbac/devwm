@@ -1,0 +1,6 @@
+urxvtd -q -o -f &
+xsetroot -cursor_name left_ptr &
+feh --bg-scale '/home/dejanstrbac/.bg.jpg'
+xset r rate 200 40 &
+exec devwm
+

@@ -15,7 +15,7 @@
 #define VIEW_HORIZONTAL_STACK   1
 #define VIEW_SINGLE             2
 
-const char* urxvtcmd[] = {"urxvt","-fade","30","-bg","black","-fg","white","-fadecolor","white",NULL};
+const char* urxvtcmd[] = {"urxvtc","-fade","30","-bg","black","-fg","white","-fadecolor","white",NULL};
 
 // Avoid multiple paste
 #define DESKTOPCHANGE(K,N) \
@@ -37,7 +37,7 @@ static struct key keys[] = {
     {  MOD4,             XK_Return,                  swap_master,    {NULL}},
     {  MOD4|ShiftMask,   XK_Return,                  switch_mode,    {.i = VIEW_SINGLE}},
     {  MOD4,             XK_space,                   switch_mode,    {NULL}},
-    {  MOD4,             XK_n,                       spawn,          {.com = urxvtcmd}},
+    {  MOD4,             XK_d,                       spawn,          {.com = urxvtcmd}},
     {  MOD4,             XK_Right,                   next_desktop,   {NULL}},
     {  MOD4,             XK_Left,                    prev_desktop,   {NULL}},
        DESKTOPCHANGE(   XK_1,                                       0)
